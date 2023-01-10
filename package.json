@@ -8,6 +8,7 @@
   "repository": "https://github.com/meipp/everytime.js.git",
 
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
