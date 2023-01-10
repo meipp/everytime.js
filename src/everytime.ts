@@ -188,25 +188,3 @@ every.day = new DayWithoutStart(1 * DAY)
 every.week = new EverytimeWithoutStart(1 * WEEK)
 
 every.other = new EveryOther()
-
-
-async function greet() {
-    console.log("hello at", moment())
-}
-
-// scheduleIterator(greet, every(5).seconds[Symbol.iterator]())
-// schedule(every(2).seconds)(A.greet)
-every(2).seconds.do(greet)
-every.other.day.at("12:15").do(greet)
-
-// every.second.startingAt()
-
-// let i = 0
-// for(const x of every(5).days.at("2:15")) {
-//     console.log(x)
-
-//     i++
-//     if(i === 5) {
-//         break;
-//     }
-// }
