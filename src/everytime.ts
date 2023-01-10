@@ -1,5 +1,5 @@
-import moment from "moment"
-import { Moment } from "moment"
+import dayjs from "dayjs"
+import { Dayjs } from "dayjs"
 
 const MILLISECONDS = 1
 const SECONDS = 1000 * MILLISECONDS
@@ -17,10 +17,10 @@ const WEEK = WEEKS
 
 const OTHER = 2
 
-function scheduleIterator(action: () => Promise<void>, timesteps: Iterator<Moment>) {
+function scheduleIterator(action: () => Promise<void>, timesteps: Iterator<Dayjs>) {
     const timestep = timesteps.next()
     if(!timestep.done) {
-        const now = moment()
+        const now = dayjs()
         const diff = timestep.value.diff(now)
 
         setTimeout(async () => {
@@ -30,7 +30,7 @@ function scheduleIterator(action: () => Promise<void>, timesteps: Iterator<Momen
     }
 }
 
-function schedule(timesteps: Iterable<Moment>) {
+function schedule(timesteps: Iterable<Dayjs>) {
     function decorator(action: () => Promise<void>) {
         scheduleIterator(action, timesteps[Symbol.iterator]())
         return action
@@ -40,22 +40,22 @@ function schedule(timesteps: Iterable<Moment>) {
 
 type Milliseconds = number
 
-class TimeIterator implements Iterator<Moment> {
-    private readonly start: Moment
+class TimeIterator implements Iterator<Dayjs> {
+    private readonly start: Dayjs
     private readonly step: Milliseconds
-    private currentValue: Moment | undefined = undefined
+    private currentValue: Dayjs | undefined = undefined
 
-    public constructor(start: Moment, step: Milliseconds) {
-        this.start = start.clone()
+    public constructor(start: Dayjs, step: Milliseconds) {
+        this.start = start
         this.step = step
     }
 
-    public next(): IteratorResult<Moment> {
+    public next(): IteratorResult<Dayjs> {
         if(this.currentValue === undefined) {
             this.currentValue = this.start
         }
         else {
-            this.currentValue.add(this.step)
+            this.currentValue = this.currentValue.add(this.step)
         }
 
         return {
@@ -65,16 +65,16 @@ class TimeIterator implements Iterator<Moment> {
     }
 }
 
-class EverytimeWithStart implements Iterable<Moment> {
-    private readonly start: Moment
+class EverytimeWithStart implements Iterable<Dayjs> {
+    private readonly start: Dayjs
     private readonly step: Milliseconds
 
-    public constructor(start: Moment, step: Milliseconds) {
-        this.start = start.clone()
+    public constructor(start: Dayjs, step: Milliseconds) {
+        this.start = start
         this.step = step
     }
 
-    public [Symbol.iterator](): Iterator<Moment> {
+    public [Symbol.iterator](): Iterator<Dayjs> {
         return new TimeIterator(this.start, this.step)
     }
 
@@ -83,19 +83,19 @@ class EverytimeWithStart implements Iterable<Moment> {
     }
 }
 
-class EverytimeWithoutStart implements Iterable<Moment> {
+class EverytimeWithoutStart implements Iterable<Dayjs> {
     protected readonly step: Milliseconds
 
     public constructor(step: Milliseconds) {
         this.step = step
     }
 
-    public [Symbol.iterator](): Iterator<Moment> {
-        const now = moment()
+    public [Symbol.iterator](): Iterator<Dayjs> {
+        const now = dayjs()
         return new TimeIterator(now, this.step)
     }
 
-    public startingAt(start: Moment) {
+    public startingAt(start: Dayjs) {
         return new EverytimeWithStart(start, this.step)
     }
 
@@ -117,11 +117,11 @@ class DayWithoutStart extends EverytimeWithoutStart {
             throw new Error(`Cannot parse time [${when}]`)
         }
 
-        const now = moment()
-        const start = moment().startOf("day").add(hours, "hours").add(minutes, "minutes")
+        const now = dayjs()
+        let start = dayjs().startOf("day").add(hours, "hours").add(minutes, "minutes")
 
         if(start.diff(now) < 0) {
-            start.add(1, "day")
+            start = start.add(1, "day")
         }
 
         return new EverytimeWithStart(start, this.step)
