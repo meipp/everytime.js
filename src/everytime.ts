@@ -30,7 +30,7 @@ function scheduleIterator(action: () => Promise<void>, timesteps: Iterator<Dayjs
     }
 }
 
-function schedule(timesteps: Iterable<Dayjs>) {
+export function schedule(timesteps: Iterable<Dayjs>) {
     function decorator(action: () => Promise<void>) {
         scheduleIterator(action, timesteps[Symbol.iterator]())
         return action
