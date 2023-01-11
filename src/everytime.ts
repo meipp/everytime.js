@@ -129,6 +129,13 @@ class TakeEverytime extends Everytime {
         super()
         this.upstream = upstream
         this.n = n
+
+        if(n < 0) {
+            throw new Error("n can't be negative")
+        }
+        if(!Number.isInteger(n)) {
+            throw new Error("n must be an integer")
+        }
     }
 
     public *[Symbol.iterator](): Iterator<Dayjs> {
