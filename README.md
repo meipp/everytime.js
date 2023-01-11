@@ -46,8 +46,18 @@ schedule([dayjs(), dayjs().add(1, "day")])
 ```
 
 ### Decorators
-TODO
-We plan on extending `schedule` to work as a decorator for methods in the future.
+Keep in mind that [Decorators](https://www.typescriptlang.org/docs/handbook/decorators.html) are an experimental feature and may be subject to change.
+
+Decorators only work for methods and not for free functions. Therefore you have to wrap functions in a class to use the `run` decorator.
+
+```typescript
+class C {
+    @run(every.second)
+    static f() {
+        console.log("hello")
+    }
+}
+```
 
 ## Supported Expressions
 

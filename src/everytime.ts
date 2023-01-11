@@ -30,6 +30,12 @@ function scheduleIterator(action: () => Promise<void>, timesteps: Iterator<Dayjs
     }
 }
 
+export function run(timesteps: Iterable<Dayjs>) {
+    return (target: any, memberName: string, propertyDescriptor: PropertyDescriptor) => {
+        schedule(timesteps)(propertyDescriptor.value)
+    }
+}
+
 export function schedule(timesteps: Iterable<Dayjs>) {
     function decorator(action: () => Promise<void>) {
         scheduleIterator(action, timesteps[Symbol.iterator]())
