@@ -85,6 +85,65 @@ abstract class Everytime implements Iterable<Dayjs> {
     }
 }
 
+class FilteredEverytime extends Everytime {
+    private readonly upstream: Iterable<Dayjs>
+    private readonly predicate: (timestep: Dayjs) => boolean
+
+    constructor(upstream: Iterable<Dayjs>, predicate: (timestep: Dayjs) => boolean) {
+        super()
+        this.upstream = upstream
+        this.predicate = predicate
+    }
+
+    public *[Symbol.iterator](): Iterator<Dayjs> {
+        for(const timestep of this.upstream) {
+            if(this.predicate(timestep)) {
+                yield timestep
+            }
+        }
+    }
+}
+
+class MappedEverytime extends Everytime {
+    private readonly upstream: Iterable<Dayjs>
+    private readonly f: (timestep: Dayjs) => Dayjs
+
+    constructor(upstream: Iterable<Dayjs>, f: (timestep: Dayjs) => Dayjs) {
+        super()
+        this.upstream = upstream
+        this.f = f
+    }
+
+    public *[Symbol.iterator](): Iterator<Dayjs> {
+        for(const timestep of this.upstream) {
+            yield this.f(timestep)
+        }
+    }
+}
+
+class TakeEverytime extends Everytime {
+    private readonly upstream: Iterable<Dayjs>
+    private readonly n: number
+
+    constructor(upstream: Iterable<Dayjs>, n: number) {
+        super()
+        this.upstream = upstream
+        this.n = n
+    }
+
+    public *[Symbol.iterator](): Iterator<Dayjs> {
+        let i = 0
+        for(const timestep of this.upstream) {
+            if(i++ < this.n) {
+                yield timestep
+            }
+            else {
+                break
+            }
+        }
+    }
+}
+
 class EverytimeWithStart extends Everytime {
     private readonly start: Dayjs
     private readonly step: Milliseconds
