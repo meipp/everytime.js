@@ -71,7 +71,7 @@ class TimeIterator implements Iterator<Dayjs> {
     }
 }
 
-abstract class Everytime implements Iterable<Dayjs> {
+export abstract class Everytime implements Iterable<Dayjs> {
     public abstract [Symbol.iterator](): Iterator<Dayjs>
 
     public do(action: () => Promise<void>): void {
