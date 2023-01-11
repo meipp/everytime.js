@@ -66,6 +66,28 @@ The supported time units are
 - `day`
 - `week`
 
+### Modifier functions
+All everytime expressions are datetime iterables of type `Iterable<Dayjs>`.
+To change the scheduling, modify these enumerations with the following functions.
+
+#### filter
+```typescript
+every.hour.filter((datetime: Dayjs) => datetime.hour() < 10).do(greet)
+```
+will schedule the function hourly, but only betweeen 0:00 and 9:59.
+
+### map
+```typescript
+every.hour.map((datetime: Dayjs) => datetime.startOf("hour"))
+```
+will schedule the function hourly, but ensures that the function will run at the start of the hour at minute 0.
+
+### take
+```typescript
+every.day.at("12:00").take(10).do(greet)
+```
+will schedule the function daily at 12:00 for the next 10 days (and then terminate).
+
 ### Specific time of the day
 `day` can be scheduled for a specific time of the day:
 ```typescript
