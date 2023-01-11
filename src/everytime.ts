@@ -65,11 +65,32 @@ class TimeIterator implements Iterator<Dayjs> {
     }
 }
 
-class EverytimeWithStart implements Iterable<Dayjs> {
+abstract class Everytime implements Iterable<Dayjs> {
+    public abstract [Symbol.iterator](): Iterator<Dayjs>
+
+    public do(action: () => Promise<void>): void {
+        schedule(this)(action)
+    }
+
+    public filter(predicate: (timestep: Dayjs) => boolean): Everytime {
+        return new FilteredEverytime(this, predicate)
+    }
+
+    public map(f: (timestep: Dayjs) => Dayjs): Everytime {
+        return new MappedEverytime(this, f)
+    }
+
+    public take(n: number): Everytime {
+        return new TakeEverytime(this, n)
+    }
+}
+
+class EverytimeWithStart extends Everytime {
     private readonly start: Dayjs
     private readonly step: Milliseconds
 
     public constructor(start: Dayjs, step: Milliseconds) {
+        super()
         this.start = start
         this.step = step
     }
@@ -77,16 +98,13 @@ class EverytimeWithStart implements Iterable<Dayjs> {
     public [Symbol.iterator](): Iterator<Dayjs> {
         return new TimeIterator(this.start, this.step)
     }
-
-    public do(action: () => Promise<void>) {
-        schedule(this)(action)
-    }
 }
 
-class EverytimeWithoutStart implements Iterable<Dayjs> {
+class EverytimeWithoutStart extends Everytime {
     protected readonly step: Milliseconds
 
     public constructor(step: Milliseconds) {
+        super()
         this.step = step
     }
 
@@ -97,10 +115,6 @@ class EverytimeWithoutStart implements Iterable<Dayjs> {
 
     public startingAt(start: Dayjs) {
         return new EverytimeWithStart(start, this.step)
-    }
-
-    public do(action: () => Promise<void>) {
-        schedule(this)(action)
     }
 }
 
