@@ -1,7 +1,7 @@
 {
   "name": "everytime.js",
   "version": "0.1.2",
-  "description": "",
+  "description": "Schedule async functions to run repeatedly",
   "author": "meipp",
   "main": "dist/index.js",
   "license": "MIT",
