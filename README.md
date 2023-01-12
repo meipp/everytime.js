@@ -1,4 +1,4 @@
-# everytimejs - Schedule async functions
+# everytime.js - Schedule async functions
 
 ## TLDR
 ```typescript
@@ -19,7 +19,7 @@ every(5).days.do(greet)
 ```
 
 ## Install
-everytimejs can be installed from [npmjs](https://www.npmjs.com/package/everytime.js) with
+everytime.js can be installed from [npmjs](https://www.npmjs.com/package/everytime.js) with
 ```
 npm i everytime.js
 ```
@@ -108,6 +108,6 @@ every.day.at("12:15")
 (Note that `hour` is 24-hour based)
 
 ## How it works
-everytimejs uses `setTimeout` to schedule functions and the [dayjs](https://github.com/iamkun/dayjs/) library to calculate time differences.
+everytime.js uses `setTimeout` to schedule functions and the [Day.js](https://github.com/iamkun/dayjs/) library to calculate time differences.
 
 Normally, the process will run forever (because expressions like `every.day` describe infinitely many datetimes). If you use a finite custom iterable with `schedule`, the process will terminate accordingly.
