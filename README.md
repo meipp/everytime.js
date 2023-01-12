@@ -5,6 +5,8 @@
 every.other.day.at("12:00").do(async () => console.log("Hello"))
 ```
 
+everytime.js is a library that helps you schedule functions to run repeatedly. Also available in [Python](https://github.com/meipp/everytime).
+
 ## Full Example
 ```typescript
 import { every } from "everytime.js"
@@ -86,13 +88,13 @@ every.hour.filter((datetime: Dayjs) => datetime.hour() < 10).do(greet)
 ```
 will schedule the function hourly, but only betweeen 0:00 and 9:59.
 
-### map
+#### map
 ```typescript
 every.hour.map((datetime: Dayjs) => datetime.startOf("hour"))
 ```
 will schedule the function hourly, but ensures that the function will run at the start of the hour at minute 0.
 
-### take
+#### take
 ```typescript
 every.day.at("12:00").take(10).do(greet)
 ```
